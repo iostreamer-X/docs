@@ -1,0 +1,77 @@
+---
+title: Stories
+description: 'Express complex setups'
+---
+
+Software architectures usually have many dimensions, like what if this happens, or what if this is the input given, or if this breaks down?
+With stories you can cover all of them and present your design from different vantage points.
+
+This where the class nature of code comes quite handy. We saw that the class itself becomes the the outer box and the methods are the
+nodes inside whose state you can observe. But about the data and member fields in the classes? Where do they show up?
+
+Well, here of course! You can use those member fields as levers and switches to have conditional logic in your code. And with stories you can
+create a script telling exactly which track to go on.
+
+<Frame>
+  <img
+    className="hidden dark:block"
+    src="https://cdn.statically.io/img/raw.githubusercontent.com/iostreamer-X/public/main/stories.gif"
+    alt="How to run code"
+  />
+</Frame>
+
+## How does it work?
+
+The story script modal is another instance of our IDE where you can write code. It expects a script detailing how exactly should the story go.
+We parse all the classes and methods, and provide stubs for you to interact with. For each class that you created, you are provided an 'instance' of it.
+You can use that instance to set its member values to whatever you want!
+
+<Warning>Make sure you don't overwrite method definitions themselves!</Warning>
+
+For code that looks like:
+```typescript
+class Docker {
+  readonly shouldCrash?: boolean;
+  
+  container() {
+    if (this.shouldCrash) {
+      return 'exiting with code 1';
+    }
+    this.sideCar('hello world!')
+  }
+
+  sideCar(arg: string) {
+    console.log(`Logging: ${arg}`)
+  }
+}
+```
+
+The script will already have `docker` available in its scope. It will behave very much like an instance which
+will allow you to access `shouldCrash` and set it to either `true` or `false` depending on the story you want to tell.
+
+### Entrypoint
+
+Each story must have an entrypoint, telling which function gets called first. Given our story script is pretty much a script
+you can just call a function and it will be treated as the entrypoint. 
+
+For example, in the aforementioned code, we want to create a story which covers `container` successfully running. Our script will look like:
+```typescript
+docker.shouldCrash = false;
+docker.container();
+```
+
+## More than just conditionals
+
+You are not confined to just `if/else` statements. Whatever the type you choose for member variables, you can assign a value of that type in the script.
+
+For example, you can mock an entire database interaction and have precise control in your stories over what gets returned as the result of the query.
+
+<Frame>
+  <img
+    className="hidden dark:block"
+    src="https://cdn.statically.io/img/raw.githubusercontent.com/iostreamer-X/public/main/script.gif"
+    alt="How to run code"
+  />
+</Frame>
+
+
