@@ -1,0 +1,68 @@
+---
+title: 'Dependencies'
+description: 'How to use methods from other classes?'
+icon: 'circle-nodes'
+---
+
+You are free to use methods from other classes but there are a few rules.
+
+### Importing is implicit
+
+When referencing other classes and methods, our IDE will provide them to you directly in the scope.
+No need to write explicit import statements.
+
+<CodeGroup>
+```typescript docker-demo.ts
+/* No import statement here */
+
+class Docker {
+  readonly shouldCrash?: boolean;
+
+    /* You just add dependencies as members */
+    public sideCar: SideCar;
+  
+    container() {
+        if (this.shouldCrash) {
+        return 'exiting with code 1';
+        }
+        this.sideCar.log('hello world!');
+    }
+}
+```
+```typescript sidecar.ts
+
+/* Notice that we are not exporting anything */
+class SideCar {
+  log(arg: string) {
+    console.log(`Logging: ${arg}`)
+  }
+}
+```
+</CodeGroup>
+
+
+### Dependencies are injected
+As we saw above, you simply add dependencies as members and our compiler will take care of injecting them.
+You can put them in constructor or as members or something nested and it will all work
+
+```typescript docker-demo.ts
+class Docker {
+
+    /* Usable as this.sideCar */
+    public sideCar: SideCar;
+
+    public dependencies: {
+        external: {
+            /* Usable as this.dependencies.external.sideCar */
+            sideCar: SideCar,
+        }
+    }
+
+    constructor(
+        /* Usable as this.anotherSideCar */
+        readonly anotherSideCar: SideCar
+    ) {
+
+    }
+}
+```
