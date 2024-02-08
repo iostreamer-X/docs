@@ -1,0 +1,40 @@
+---
+title: 'Nesting'
+description: 'How to create hierarchies of nodes?'
+icon: 'layer-group'
+---
+
+So we know that a class would be a big node and inside it we'd have smaller nodes for all the methods of the class. 
+But that's not how real life diagrams are represented. There are parent child relationships, domains & sub-domains that we need to express as well.
+
+And the way we solve it in metz is to use folder structure. There are two reasons why we chose this approach:
+
+<Card icon="shelves-empty" >
+  Keep code vanilla, don't add anything custom.
+</Card>
+
+<Card icon="folder-tree" iconType="duotone">
+  Using a folder structure to create boxes around boxes forces you to define better boundaries.
+</Card>
+
+
+<br/>
+Using code to create diagrams and by extension a design of the system, is amazing for a few reasons but we believe the best one is 'Foresight'. You can see and visualise what the structure of the code would be from the get go.
+
+And hence that should be reflected when you are trying to create boundaries(or hierarchies).
+
+<Tip>Because what's a folder, if not a repository masquerading?</Tip>
+
+## How does it work?
+Each folder tile is a drop zone onto which you can drag files and other folders.
+For files, simply drag them but for folders, there's a dedicated drag handle that you have to use.
+
+And the hierarchy of folders will be reflected as nesting of nodes.
+
+<Frame>
+  <img
+    className="hidden dark:block"
+    src="https://cdn.statically.io/img/raw.githubusercontent.com/iostreamer-X/public/main/nesting.gif"
+    alt="How to nest boxes"
+  />
+</Frame>

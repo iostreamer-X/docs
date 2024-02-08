@@ -1,6 +1,10 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "metz.sh docs",
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": true
+  },
   "logo": {
     "dark": "/logo/logo.png",
     "light": "/logo/logo.png"
@@ -18,25 +22,30 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "https://metzcommunity.slack.com/join/shared_invite/zt-1xr4ooes0-AhIP47ENEqrKmnfpCw6e8Q#/shared-invite/email"
     }
   ],
   "topbarCtaButton": {
-    "name": "Got to app",
-    "url": "https://app.metz.sh"
+    "name": "Home",
+    "url": "https://metz.sh"
   },
   "tabs": [
   ],
   "anchors": [
     {
+      "name": "Roadmap",
+      "icon": "road",
+      "url": "https://metz.canny.io"
+    },
+    {
       "name": "Community",
       "icon": "slack",
-      "url": "https://metz.sh/contact"
+      "url": "https://metzcommunity.slack.com/join/shared_invite/zt-1xr4ooes0-AhIP47ENEqrKmnfpCw6e8Q#/shared-invite/email"
     },
     {
       "name": "Blog",
       "icon": "newspaper",
-      "url": "https://metz.sh/blog"
+      "url": "https://lab.metz.sh"
     }
   ],
   "navigation": [
@@ -59,18 +68,13 @@
     {
       "group": "Essentials",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
+        "essentials/dependencies",
+        "essentials/nesting",
+        "essentials/customizing"
       ]
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "linkedin": "https://www.linkedin.com/company/metz-sh/"
   }
 }

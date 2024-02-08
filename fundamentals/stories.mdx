@@ -1,13 +1,14 @@
 ---
 title: Stories
 description: 'Express complex setups'
+icon: scroll
 ---
 
 Software architectures usually have many dimensions, like what if this happens, or what if this is the input given, or if this breaks down?
 With stories you can cover all of them and present your design from different vantage points.
 
 This where the class nature of code comes quite handy. We saw that the class itself becomes the the outer box and the methods are the
-nodes inside whose state you can observe. But about the data and member fields in the classes? Where do they show up?
+nodes inside whose state you can observe. But what about the data and member fields in the classes? Where do they show up?
 
 Well, here of course! You can use those member fields as levers and switches to have conditional logic in your code. And with stories you can
 create a script telling exactly which track to go on.
@@ -29,7 +30,7 @@ You can use that instance to set its member values to whatever you want!
 <Warning>Make sure you don't overwrite method definitions themselves!</Warning>
 
 For code that looks like:
-```typescript
+```typescript docker-demo.ts
 class Docker {
   readonly shouldCrash?: boolean;
   
