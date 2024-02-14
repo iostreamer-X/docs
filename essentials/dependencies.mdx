@@ -20,12 +20,26 @@ class Docker {
 
     /* You just add dependencies as members */
     public sideCar: SideCar;
+
+    /**
+     * You can also have a nested object acting as a dependency and it
+     * will be handled automatically.
+    */
+    public dependencies: {
+        external: {
+            /* Usable as this.dependencies.external.sideCar */
+            sideCar: SideCar,
+        }
+    }
   
     container() {
         if (this.shouldCrash) {
         return 'exiting with code 1';
         }
+
+        /* The following two calls will reach the same method */
         this.sideCar.log('hello world!');
+        this.dependencies.external.sideCar.log('hello again!')
     }
 }
 ```
@@ -42,27 +56,11 @@ class SideCar {
 
 
 ### Dependencies are injected
-As we saw above, you simply add dependencies as members and our compiler will take care of injecting them.
-You can put them in constructor or as members or something nested and it will all work
 
-```typescript docker-demo.ts
-class Docker {
+The reason you don't have to import anything is because we build an internal DI container. Any method calling
+another method, uses this DI container to reach it.
 
-    /* Usable as this.sideCar */
-    public sideCar: SideCar;
+This also means that if you were to instantiate classes manually, they will not be reachable by other methods.
 
-    public dependencies: {
-        external: {
-            /* Usable as this.dependencies.external.sideCar */
-            sideCar: SideCar,
-        }
-    }
 
-    constructor(
-        /* Usable as this.anotherSideCar */
-        readonly anotherSideCar: SideCar
-    ) {
 
-    }
-}
-```

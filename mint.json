@@ -58,6 +58,7 @@
           "group": "Fundamentals",
           "pages": [
             "fundamentals/class-based",
+            "fundamentals/singleton-nature",
             "fundamentals/playground",
             "fundamentals/stories"
           ]
@@ -71,6 +72,12 @@
         "essentials/dependencies",
         "essentials/nesting",
         "essentials/customizing"
+      ]
+    },
+    {
+      "group": "Advanced",
+      "pages": [
+        "advanced/access-modifiers"
       ]
     }
   ],
