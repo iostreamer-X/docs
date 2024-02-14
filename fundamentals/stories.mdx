@@ -27,8 +27,6 @@ The story script modal is another instance of our IDE where you can write code. 
 We parse all the classes and methods, and provide stubs for you to interact with. For each class that you created, you are provided an 'instance' of it.
 You can use that instance to set its member values to whatever you want!
 
-<Warning>Make sure you don't overwrite method definitions themselves!</Warning>
-
 For code that looks like:
 ```typescript docker-demo.ts
 class Docker {
@@ -38,11 +36,19 @@ class Docker {
     if (this.shouldCrash) {
       return 'exiting with code 1';
     }
-    this.sideCar('hello world!')
+    this.sideCar(
+      this.parseLog(
+        'hello world!'
+      )
+    )
   }
 
   sideCar(arg: string) {
     console.log(`Logging: ${arg}`)
+  }
+
+  private parseLog(arg: string) {
+    return `${new Date().toISOString()}: ${arg}`
   }
 }
 ```
@@ -55,24 +61,27 @@ will allow you to access `shouldCrash` and set it to either `true` or `false` de
 Each story must have an entrypoint, telling which function gets called first. Given our story script is pretty much a script
 you can just call a function and it will be treated as the entrypoint. 
 
+<Warning>Starting two nodes parallely by calling two entrypoints is not supported as of now.</Warning>
+
 For example, in the aforementioned code, we want to create a story which covers `container` successfully running. Our script will look like:
 ```typescript
 docker.shouldCrash = false;
 docker.container();
 ```
 
-## More than just conditionals
 
-You are not confined to just `if/else` statements. Whatever the type you choose for member variables, you can assign a value of that type in the script.
+## Overriding
 
-For example, you can mock an entire database interaction and have precise control in your stories over what gets returned as the result of the query.
+You can override anything except for public methods! 
 
-<Frame>
-  <img
-    className="hidden dark:block"
-    src="https://cdn.statically.io/img/raw.githubusercontent.com/iostreamer-X/public/main/script.gif"
-    alt="How to run code"
-  />
-</Frame>
+```typescript docker-demo-story-script.ts
+docker.shouldCrash = false;
 
+/* 
+* We need to index the private fields like this to override them since the 
+* dot notation doesn't allow access to private keys.
+*/
+docker['parseLog'] = (arg) => `Logged at ${new Date().toLocaleString()}: ${arg}`
 
+docker.container();
+```

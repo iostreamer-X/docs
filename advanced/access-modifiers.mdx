@@ -1,0 +1,28 @@
+---
+title: 'Public or Private'
+description: 'How are access modifiers handled?'
+icon: 'circle-nodes'
+---
+
+To answer it simply, `public` properties are compiled by us and `private` ones are left alone.
+So, if you have a public method, you'd see it on the playground, and other nodes will be able to interact
+with it.
+
+But if it's a private method, then our compiler doesn't even touch it. It's purely for internal uses only.
+
+## When to use what?
+If you want to show something and make it part of your story then it should be public. But you won't be able
+to mess with it much. For example, you can't override it in story script. Also, a few things simply won't work directly, like
+calling those public methods from `map`, `filter` et al.
+
+Which is why, private methods are more suited for behind the scene processing you might need. So, all the data massaging
+can go into private methods but all conditionals representing business logic should be part of public methods.
+
+<Note>You can also compose private methods and keep you code clean!</Note>
+
+## Caveats
+You can call private methods from public ones, but not vice versa. This is because a private method doesn't even end up
+on playground but more importantly, it breaks the logical hierarchy that exists.
+
+Think of it like a layered architecture where a layer is only allowed to interact with ones below it. And in our case
+the public methods represent the business logic layer and private methods are the agnostic building blocks.

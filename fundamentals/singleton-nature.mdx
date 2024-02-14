@@ -1,0 +1,30 @@
+---
+title: Singleton Nature
+description: 'How to have multiple instances of classes?'
+icon: square-code
+---
+
+Each class in instantiated exactly once and used throughout the story. If you want to show multiple instances of a class, inheritance is the way.
+
+```typescript multiple-servers.ts
+/* Common logic is present here */
+class Server {
+  serve() {
+    return 'ok'
+  }
+}
+
+/* The method 'serve' will be present in both Server1 and Server2 */
+
+class Server1 extends Server {
+
+}
+
+class Server2 extends Server {
+  
+}
+```
+
+
+
+
