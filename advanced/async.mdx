@@ -1,0 +1,55 @@
+---
+title: 'Async and Parallelism'
+description: 'How to show stuff happening in background?'
+icon: 'circle-nodes'
+---
+
+We support async/await and promise natively, and the easiest way to do that is how you might do this in realworld code.
+Say you have a synchronous function and you want to fire off a background task without caring for its result immediately.
+
+<Warning>Storing returned promises and handling them is not supported yet</Warning>
+
+To do this in JS environments, one might write code like this:
+
+```typescript async-demo.ts
+class Docker {
+  readonly shouldCrash?: boolean;
+  
+  container() {
+    if (this.shouldCrash) {
+      return 'exiting with code 1';
+    }
+    console.log('We are calling our sideCar without waiting for its result')
+    this.sideCar('hello world!');
+
+    const result = this.db();
+    this.cache();
+  }
+
+  db() {
+  }
+
+  cache() {
+  }
+
+  async sideCar(arg: string) {
+    await this.wait();
+    console.log(`Logging: ${arg}`)
+  }
+
+    private async wait() {
+        return new Promise<void>(resolve=>setTimeout(resolve, 5000))
+    }
+}
+```
+
+<Frame>
+    <iframe width="900px" height="600px" src="https://app.metz.sh/play/8RrpYkGb77CEY4bzklSC1" />
+</Frame>
+<Card
+  title="Open in fullscreen"
+  icon="circle-nodes"
+  href="https://app.metz.sh/play/8RrpYkGb77CEY4bzklSC1"
+>
+It might be a little congested here, open this in new tab!
+</Card>

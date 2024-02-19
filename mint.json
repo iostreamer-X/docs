@@ -77,7 +77,8 @@
     {
       "group": "Advanced",
       "pages": [
-        "advanced/access-modifiers"
+        "advanced/access-modifiers",
+        "advanced/async"
       ]
     }
   ],
