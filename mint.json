@@ -29,56 +29,17 @@
     "name": "Home",
     "url": "https://metz.sh"
   },
-  "tabs": [
-  ],
-  "anchors": [
-    {
-      "name": "Roadmap",
-      "icon": "road",
-      "url": "https://metz.canny.io"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://metzcommunity.slack.com/join/shared_invite/zt-1xr4ooes0-AhIP47ENEqrKmnfpCw6e8Q#/shared-invite/email"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://lab.metz.sh"
-    }
-  ],
+  "tabs": [],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": [
-        "quickstart",
-        "introduction",
-        {
-          "group": "Fundamentals",
-          "pages": [
-            "fundamentals/class-based",
-            "fundamentals/singleton-nature",
-            "fundamentals/playground",
-            "fundamentals/stories"
-          ]
-        }
-        
-      ]
+      "pages": ["introduction", "core-concepts", "runtime", "standard-library"]
     },
     {
-      "group": "Essentials",
+      "group": "Managing Classes",
       "pages": [
-        "essentials/dependencies",
-        "essentials/nesting",
-        "essentials/customizing"
-      ]
-    },
-    {
-      "group": "Advanced",
-      "pages": [
-        "advanced/access-modifiers",
-        "advanced/async"
+        "managing-classes/dependencies",
+        "managing-classes/files-and-scope"
       ]
     }
   ],
