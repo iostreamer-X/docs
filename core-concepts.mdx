@@ -1,0 +1,71 @@
+---
+title: Core Concepts
+---
+
+## Class-Based System
+
+In Metz, everything is modeled through classes. For example, to create a Load Balancer, you would define a `LoadBalancer` class. Behavior is implemented as methods within these classes.
+
+Classes can interact with each other, allowing for complex system modeling. Here's an example of a simple backend system with a Load Balancer and Servers:
+
+```typescript
+class Server {
+  handleRequest() {
+    return 200;
+  }
+}
+
+@Injectable
+class LoadBalancer {
+  private servers = [
+    new Server(),
+    new Server()
+  ];
+
+  private currentServerIndex: number = 0;
+  public shouldFail = false;
+
+  route() {
+    if (this.shouldFail) {
+      return 500;
+    }
+    const server = this.servers[this.currentServerIndex];
+    this.currentServerIndex = (this.currentServerIndex + 1) % this.servers.length;
+    return server.handleRequest();
+  }
+}
+```
+
+Note the use of the `@Injectable` decorator, which integrates with Metz's Dependency Injection Container. Classes marked with `@Injectable` can be retrieved using the standard library's `resolve` function.
+
+## Flows
+
+Flows in Metz are analogous to threads in traditional programming. They represent the execution of your modeled system. To activate a class and its behavior, you create a flow:
+
+```typescript
+const loadBalancer = std.resolve(LoadBalancer);
+std.flow('Route requests to servers', loadBalancer).route();
+```
+
+This creates and runs a named flow in its own "thread" within Metz.
+
+You can also run timer-based flows for continuous operations:
+
+```typescript
+const loadBalancer = std.resolve(LoadBalancer);
+std.flow('Route requests to servers', loadBalancer, { every: 5 }).route();
+```
+
+## Stories
+
+Stories serve as entry points to your code, allowing you to model different scenarios within your system. Each story has an associated script that sets up and executes the desired scenario.
+
+For example, to create a story that demonstrates a Load Balancer failure:
+
+```typescript
+const loadBalancer = std.resolve(LoadBalancer);
+loadBalancer.shouldFail = true;
+std.flow('Load Balancer fails', loadBalancer).route();
+```
+
+Stories enable you to showcase various aspects of your system design and behavior, providing a comprehensive view of your architecture.

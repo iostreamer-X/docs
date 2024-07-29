@@ -1,0 +1,39 @@
+---
+title: Runtime
+description: 'Understanding how your code runs'
+---
+
+Our runtime is actually a thin layer over actual JavaScript runtime in your browser. But we will keep the name because it does a lot
+of similar things.
+
+Your code actually gets compiled into something that can emit metz's instruction set. Now that sounds complicated, except our
+instruction set is simply:
+```typescript
+LOAD <ADDRESS>
+UNLOAD <ADDRESS>
+LOG <ANY[]>
+HALT
+```
+
+The job of our runtime is to execute these instructions and render the executions on screen. So when you see a signal going from one box to another, that is actually our runtime executing `LOAD`.
+
+### Tick
+
+In traditional machines, the CPU operating at some frequency, runs the instructions. The frequency, which is actually the frequency of cycles, controls the speed at which this happens.
+
+Our runtime has a similar setup, where the cycle, or in metz's terms, the tick is a first class entity. Everything happens on a tick, from function calls to logs.
+
+### Tock
+A tick is also a unit of time in metz. So when you say:
+```typescript
+const loadBalancer = std.resolve(LoadBalancer);
+std.flow('Route requests to servers', loadBalancer, { every: 5 }).route();
+```
+
+The `{ every: 5 }` tells the runtime to execute this flow after every 5 ticks.
+
+<Note>This is just like [Tron's cycles](https://tron.fandom.com/wiki/Cycle)</Note>
+
+This enables you to reliably model time in your design. Whether you have paused the playground or not, real time doesn't affect your code.
+
+

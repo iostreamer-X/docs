@@ -1,0 +1,58 @@
+---
+title: The Standard Library
+---
+
+Metz exposes its standard library through the global variable `std`. It has everything needed to interact with the runtime and other helpers.
+
+# `resolve`
+Takes a class reference and gets its instance from the DI container.
+
+```typescript
+function resolve<T extends InjectableClasses>(
+  classInstance: Constructor<T>
+): T
+```
+**Example**
+
+To retreive an instance of a class called `LoadBalancer`, you'd write:
+```typescript
+  const loadBalancer = std.resolve(LoadBalancer);
+```
+
+<Warning>This only works with classes participating in [Dependency Injection](/managing-classes/dependencies)</Warning>
+
+<br/>
+<br/>
+<br/>
+
+# `flow`
+Helper to create and run a [Flow](/core-concepts#flows)
+```typescript
+function flow<T extends AllClasses>(
+  name: string, 
+  classInstance: T, 
+  options?: { after: number } | { every: number }
+): MetzFlow<T>
+```
+
+Takes an instance of one of your classes, augments it and returns a `MetzFlow`. Which actually is a proxy of your given instance and has similar types.
+When you execute a function on `MetzFlow`, the runtime creates a new flow and starts executing it.
+
+**Example**
+```typescript
+  const loadBalancer = std.flow(
+    'Route requests to servers', 
+    std.resolve(LoadBalancer)
+  );
+  
+  //This works because std.flow returns back the provided instance
+  loadBalancer.shouldFail = true;
+  
+  loadBalancer.route();
+```
+
+Or a more succint way of doing it if you are not modifying anything:
+```typescript
+  const loadBalancer = std.resolve(LoadBalancer);
+  std.flow('Route requests to servers', loadBalancer).route();
+```
