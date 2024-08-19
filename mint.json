@@ -20,23 +20,30 @@
     }
   },
   "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "https://metzcommunity.slack.com/join/shared_invite/zt-1xr4ooes0-AhIP47ENEqrKmnfpCw6e8Q#/shared-invite/email"
+	  {
+	  	"name": "Try in playground",
+	    "url": "https://try.metz.sh",
+	    "type": "link"
+	  },
+  	{
+    	"name": "Github",
+      "url": "https://github.com/metz-sh/simulacrum",
+      "type": "link"
     }
   ],
   "topbarCtaButton": {
-    "name": "Home",
-    "url": "https://metz.sh"
-  },
+     "type": "link",
+     "url": "https://metz.sh",
+     "name": "Home"
+   },
   "tabs": [],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "core-concepts", "runtime", "standard-library"]
+      "pages": ["introduction","classes", "stories", "flows-101"]
     },
     {
-      "group": "Managing Classes",
+      "group": "Dependencies & Scope",
       "pages": [
         "managing-classes/dependencies",
         "managing-classes/files-and-scope"

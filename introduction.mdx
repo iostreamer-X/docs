@@ -1,12 +1,66 @@
 ---
 title: Introduction
 ---
-Metz is a powerful tool for creating interactive diagrams from TypeScript code. You can use it to express complex engineering ideas or even abstract ones. With metz, communication is just coding problem!
+Metz is a powerful tool for creating interactive diagrams from TypeScript code. You can use it to express complex engineering ideas or even abstract ones. With metz, communication is just a coding problem!
 
-## Key Features
+But it's also a long way from drawing boxes and lines. It's a different way of thinking about documentation and communication.
 
-1. **Visual Runtime**: Metz includes its own visual runtime that executes the code you write, providing a dynamic and interactive experience.
-2. **Story-Based Design**: The framework introduces the concept of "Stories," allowing you to segment your design and showcase different aspects of your system.
-3. **Opinionated Framework**: Metz leverages battle-tested and mature ideas to provide a familiar and efficient `DX`.
-4. **Browser native**: We run everything, from compilation to managing runtime, entirely in the browser. 
+## Mental Model
+When designing, regardless of level, we are used to breaking down the system in components. Next, we figure out how components interact with each other.
+And that's usually the end of it.
 
+It's the end of it, because the standard tools can't take you any further. But with metz, you are nudged to solve the problem using code.
+One distinct feature of using code, is that you get behaviour for free. And that's where metz shines.
+
+Say you were to design a system where you have multiple cron jobs, polling databases and updating them. You can absolutely have boxes represents databases
+and some more boxes to represent a service & cron jobs.
+<br/>But with metz, you could just write the most bare bones code for it, and metz will visualise it for you.
+
+<Frame>
+    <iframe width="900px" height="600px" src="https://app.metz.sh/play/fc6528590cc2404283a98533aedeb519?minimal=true" />
+</Frame>
+
+
+For example, the code for poller, simply looks like this
+```typescript poller.ts
+
+class Poller {
+    private ordersTable = std.resolve(OrdersTable);
+    private pollingCollection = std.resolve(PollingCollection);
+
+    poll() {
+        //Update all 'pending' orders to 'processing' state
+        const updatedOrder = this.ordersTable.update(
+            {
+                status: 'processing'
+            },
+            std.lambda(order => order.status === 'pending')
+        )
+
+        if(!updatedOrder) {
+            return
+        }
+
+        std.log('Got an order!')
+        this.pollingCollection.insert({
+            id: `poll_${updatedOrder.id}`,
+            order_id: updatedOrder.id
+        });
+    }
+
+}
+```
+
+## Advantages
+It's subtle, but notice that there are two pollers but not two entries in polling collection.
+The proposed design of a system like this, would have this crucial fact lost in a footnote.
+And when implementing the design, someone could easily miss this required behaviour.
+
+But when you use code, you weild the perfect medium to express such critical facts. And pair that with metz,
+this behaviour becomes not only apparent but a first class citizen of documentation.
+
+And that's what you get with metz. The ability to express engineering complexity using code, and the ease to communicate it with your audience.
+
+<br/>
+<br/>
+Let's look the fundamental concept behind this, [classes](/classes).

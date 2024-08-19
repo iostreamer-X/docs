@@ -1,0 +1,98 @@
+---
+title: Stories
+---
+
+Say we created a simple web server using NodeJS. Our `package.json` file will have a configuration called [main](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#main),
+telling the entrypoint to our code.
+<br/>And if we dockerize our app, we will literally have an [entrypoint](https://docs.docker.com/reference/dockerfile/#entrypoint) which
+will control what runs in the container.
+
+And that's good starting point to introduce stories.
+
+<video
+  muted
+  playsInline
+  controls
+  className="w-full aspect-video"
+  src="/videos/story-creation.mp4"
+></video>
+
+At its very core, a story is what's responsible for running your code. It's very much an entrypoint to it.
+
+It's also a fundamental unit. In metz your code doesn't just run and get visualised, it's a story that gets rendered.
+It's a script where you can instantiate classes, write all sorts of setup code. And the execution of that script
+breathes life into your code.
+
+## More than an entrypoint
+The key difference here, is that unlike entrypoints, you can have as many stories you want. In fact, that's the intended way.
+
+Each story, tells a different <Tooltip tip="This is shameful but couldn't be helped.">story</Tooltip> about your code, your design.
+This is where you comprehensively communicate all the edge cases, all the "What Ifs" and let your audience see every
+angle of the designed system.
+
+This ties quite neatly with the [Class based](/classes) approach we have. Each class represents data and behaviour, where they both can change each other.
+
+Let's look at an example. Say we an authentication system where the db can fail, and does things differently if it indeed fails.
+To capture this, we can write the following code:
+
+```typescript
+class AuthenticationService {
+	isDatabaseDown = false;
+
+	authenticate(sessionToken: string) {
+		if(this.isDatabaseDown) {
+			return {
+				type: 'error',
+				message: 'Database is down!'
+			}
+		}
+
+		return {
+			type: 'response',
+			message: 'User is authenticated!'
+		}
+	}
+}
+```
+
+Now, this is an oversimplification, but ignoring that for now. Let's focus on `isDatabaseDown` where if it's `false` all good, but if `true` then we get an error response.
+
+And to cover both the cases, we can create two stories!
+<br/> One where `isDatabaseDown` is `false` and anothere where it's `true`.
+
+<CodeGroup>
+```typescript First Script
+const service = new AuthenticationService();
+std.flow("DB is up", service).authenticate('123').run();
+```
+
+```typescript Second Script
+const service = new AuthenticationService();
+service.isDatabaseDown = true;
+std.flow("DB is down", service).authenticate('123').run();
+```
+</CodeGroup>
+<br/>
+<br/>
+Here's another example, where we see how a system can break under a particular condition.
+From the 'Stories' dropdown, choose the other story to see how the system behaves normally.
+
+<Frame>
+    <iframe width="900px" height="700px" src="https://app.metz.sh/play/0286b754d9e4408ba172e344eeac47b9" />
+</Frame>
+<Card horizontal title="Click here to open in a tab" icon="link" href="https://app.metz.sh/play/0286b754d9e4408ba172e344eeac47b9">
+  Things might be squished here!
+</Card>
+
+
+## Advantage
+Each story, is the exection of same code but under different conditions. Nowhere did we have to
+repeat ourselves.
+<br/>Just write a script, change the initial conditions, and you get a completely new perspective of the design.
+
+<br/>
+<br/>
+<br/>
+But what's the `std.flow` business? We have seen that before, but what does it do?. Why does it have that weird syntax?
+
+Well, let's find out in the next section!
