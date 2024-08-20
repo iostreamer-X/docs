@@ -30,7 +30,7 @@ And that's where `Flow` comes in. It is always named, and you can see how differ
   src="/videos/flows.mp4"
 ></video>
 
-You can assign any name to a flow, but it helps if it'a aligned with the use-case you are trying to show.
+<Tip>You can assign any name to a flow, but it helps if it'a aligned with the use-case you are trying to show.</Tip>
 
 You can create a flow through the following syntax:
 ```typescript
@@ -38,13 +38,25 @@ std.flow(
 	"<name of the flow>",
 	main, // An instance of a class.
 )
-.hello() // This is a modified version the method.
-.run(); // Starts executing the flow.
+.hello() // Simply call the method you want to run.
+.run(); // Normal flows are not eagerly executed, call 'run' when you want.
 ```
+
+<Accordion title="My flow is not running. Why?">
+1. Did you use `std.flow` to create it?
+2. If yes, then did you pass an instance of the class and not some other object?
+3. Did you call the method you want to execute?
+4. Did you call `.run()` on the method you want to execute?
+
+If the answer is yes to all the question and it still doesn't work, please [create an issue](https://github.com/metz-sh/simulacrum/issues/new) on github.
+Or for a more swift response, [join our slack](https://metzcommunity.slack.com/join/shared_invite/zt-1xr4ooes0-AhIP47ENEqrKmnfpCw6e8Q#/shared-invite/email) and we will get on it right away.
+</Accordion>
+
+
 
 There's so much more to flows but we will stop here for now and dig deeper in [Flows-102](/flows-102).
 
-<Note>Try playing with flows in the [playground](https://app.metz.sh/try)</Note>
+
 <br/>
 And with that, we have learnt the basic building blocks of metz. Go to the [playground](https://app.metz.sh/try) to try those things,
 but come back soon!

@@ -45,9 +45,13 @@
     {
       "group": "Dependencies & Scope",
       "pages": [
-        "managing-classes/dependencies",
-        "managing-classes/files-and-scope"
+        "dependencies-and-scope/dependencies",
+        "dependencies-and-scope/files-and-scope"
       ]
+    },
+    {
+      "group": "Internals",
+      "pages": ["runtime"]
     }
   ],
   "footerSocials": {

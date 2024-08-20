@@ -1,10 +1,9 @@
 ---
 title: Files and Scope
-description: 'How to use things present in different files?'
 ---
 
 Metz emulates a simple in-memory filesystem, complete with file and folder operations. This means you can structure your code
-the way you see fit. 
+the way you see fit.
 
 In your `.ts` file, you can create the following things at top level:
 - `class`
@@ -12,53 +11,62 @@ In your `.ts` file, you can create the following things at top level:
 - `enum`
 - `type`
 
-<Note>The folder structure also controls the visual hierarchy. [See here]()</Note>
+<video
+  muted
+  playsInline
+  controls
+  className="w-full aspect-video"
+  src="/videos/files.mp4"
+></video>
 
 
 ## Global Scope
-Let's say you put `UserRepository` in `user-repository.ts` and other such classes in their respective files. Similarly, `RegistrationService` ends up in `registration-service.ts`.
-
-But how do you import `UserRepository` class in `registration-service.ts`?
+We have now put the two classes `Hello` and `World` in two different files. But the question remains, how is `Hello`
+able to refer to `World`? Where's the import statement? How do you even import?
 
 That's the neat part, you don't!
 
-In metz you don't have to deal with importing anything, because everything is made available in the global namespace. 
+In metz you don't have to deal with importing anything, because everything is made available in the global namespace.
 
-Every class, interface, type, enum that you create in a file is made available for you to use in all your files.
+Every class, interface, type, enum that you create in a file is made available for you to use in all your other files.
 
 <CodeGroup>
 
-```typescript db.ts
+```typescript hello.ts
 @Injectable
-class DatabaseClient {
-    // ... Doing some db stuff
+class Hello {
+	/*
+	* Class 'World' is simply available in the namespace, just like 'std'.
+	*/
+	private worldInstance = std.resolve(World);
+
+    hello() {
+        const result = this.worldInstance.world('Hello');
+        std.log(result);
+    }
 }
 ```
 
-```typescript user-repository.ts
+```typescript world.ts
 @Injectable
-class UserRepository {
-    private readonly db = std.resolve(DatabaseClient);
+class World {
 
-    // ... Managing user entity
+    world(arg: string) {
+        return `${arg} World!`
+    }
 }
 ```
-
-```typescript registration-service.ts
-@Injectable
-class RegistrationService {
-    private readonly userRepository = std.resolve(UserRepository);
-
-    // ... Can't manage users without acquiring them!
-}
-```
-```typescript cart-service.ts
-@Injectable
-class CartService {
-    private readonly userRepository = std.resolve(UserRepository);
-
-    // ... Why acquire if they are not going to buy?
-}
-```
-
 </CodeGroup>
+
+<br/>
+<br/>
+
+We have covered a lot of ground! We understand what puts boxes and lines on the playground. We understand
+how to make our code run. Not just that, but actually show different sides of the system! We also learnt how to do all this tidily.
+
+But to move forward, we need to look below the abstarctions a little. The way our runtime works, it's fully
+capable of helping you design and communicate a distributed system, a low level react component and anything in between.
+
+It's possible because **time works differently in the runtime**.
+
+<Tooltip tip="It's not intentional, these puns just emerge!">That's a bold statement.</Tooltip> But well worth the rabbit hole. Let's take a look under the hood, and see what it means for you!

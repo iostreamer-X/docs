@@ -1,68 +1,74 @@
 ---
 title: Dependencies
-description: 'How to handle dependencies on other classes?'
 ---
 
+So far, everything we have looked at involved just one class. But if we were to do everything in just one class
+that won't be very [SOLID](https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design) of us.
+<br/>And it's not just about following patterns, it's not even practical or friendly!
+
+There are two ways you can talk to other classes. The first one is as old as OOP, simply create an instance
+and call its methods.
+
+The second, is more convenient based on the situation. Let's cover this first and then we can look at instantiating classes.
+
 ## Dependency Injection
-Metz maintains a DI container to store singleton instances of classes. These instances can be retreived using `std.resolve` and classes
-can participate in Dependency Injection if they are decorated with `@Injectable`.
+Rather than you manually managing creation of classes, metz can do it for you.
+We maintain a DI container to store a singleton instance of a classe. These instances can then be retreived using `std.resolve`.
 
-<Warning>Classes participating in DI can not have a constructor with uninitialized parameters. [See this]()</Warning>
+Simply decorate the class with `@Injectable` and it will start participating in dependency injection.
 
-And because the DI container simply stores a singleton, this pattern comes handy when you don't want the overhead of managing things.
 Metz will put the class in a box, and you can take it out whenever or wherever you want.
 Moreover, metz will take care of creating the entire dependency graph for you.
 
-So if you have a setup like:
+So to increase complexity for the sake of it, let's divide our hello world `Main` class [example](/classes) into two classes.
+
+So it now looks like this:
 ```mermaid
   flowchart TB
-    DatabaseClient ---> UserRepository ---> RegistrationService
-    UserRepository ---> CartService
+    Hello ---> World
 ```
 
 You can use DI to make this representation easy:
 ```typescript
 @Injectable
-class DatabaseClient {
-    // ... Doing some db stuff
+class Hello {
+	/*
+	* We are using std.resolve to get the singleton instance of 'World'
+	* and make it our member.
+	*/
+	private worldInstance = std.resolve(World);
+
+    hello() {
+        const result = this.worldInstance.world('Hello');
+        std.log(result);
+    }
 }
 
 @Injectable
-class UserRepository {
-    private readonly db = std.resolve(DatabaseClient);
+class World {
 
-    // ... Managing user entity
-}
-
-@Injectable
-class RegistrationService {
-    private readonly userRepository = std.resolve(UserRepository);
-
-    // ... Can't manage users without acquiring them!
-}
-
-@Injectable
-class CartService {
-    private readonly userRepository = std.resolve(UserRepository);
-
-    // ... Why acquire if they are not going to buy?
+    world(arg: string) {
+        return `${arg} World!`
+    }
 }
 ```
+<Warning>Classes participating in DI can not have a constructor with uninitialized parameters.</Warning>
 
 ## Manual Construction
 
 You can always use `new` to create instances manually, regardless if the class is part of DI container or not.
 
-This is best suited for scenarios where you need multiple instances of the same thing. As we saw in the Load Balancer example in [Core Concepts](/core-concepts#class-based-system).
+This is best suited for scenarios where you need multiple instances of the same thing. For example the `Poller` in [Introduction](/introduction)
+needs to have 2 instances.
+<br/>So we instantiated them using `new`, you can see this in the [code on playground](https://app.metz.sh/try?templateId=4) as well.
 
-```typescript
-@Injectable
-class LoadBalancer {
-  private servers = [
-    new Server(),
-    new Server()
-  ];
+<br/>
+You can see how the system behaves when the two approaches are used simulatenously.
+<Frame>
+    <iframe width="900px" height="600px" src="https://app.metz.sh/play/459ba1b42fa746b58f957b6c8f4603a6?minimal=true" />
+</Frame>
 
-  // ... rest of the LoadBalancer implementation
-}
-```
+<Tip>Creating instances on the fly is automatically handled when rendering!</Tip>
+
+<br/>
+We got multiple classes, but we are still stuck in a single file. Let's check out the next section to fix that.
