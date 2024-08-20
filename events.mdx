@@ -1,0 +1,67 @@
+---
+title: Events
+---
+
+This mechanism doesn't need a lot of introduction, so let's get down how you can use it.
+
+In metz, events are transmitted over a `Channel` but your interface through two key functions.
+
+### `std.createChannelEmitter`
+This function takes a `topic` as a parameter, creates a `Channel` for that topic and returns an emitter
+which will let you dispatch events.
+
+### `std.registerChannelListener`
+This takes two params, a `topic` and a `listener`. The `listener` must return a `FlowExecutor`
+With these params, the channel corresponding the topic is found and whenever there's an event
+on that channel, the `listener` is invoked.
+
+For example:
+```typescript
+@Injectable
+class StockPriceEmitter {
+	// We create the emitter when class gets instantiated
+	private emitter = std.createChannelEmitter<number>('apple');
+
+	emit() {
+		const randomPrice = Math.random()*300;
+		this.emitter.emit(randomPrice);
+	}
+}
+
+@Injectable
+class AppleAverageStockPrice {
+	MAX_STORAGE = 10;
+	private storedPrices: number[] = [];
+
+	@Show
+	averagePrice: number = 0;
+
+	constructor() {
+		// We register our listener at the time of instantiation
+		std.registerChannelListener(
+			'apple',
+			std.flow("Calculate Average Apple Stock price", this).updateAverage,
+		);
+	}
+
+	private addToStoredPrices(price: number) {
+		if(this.storedPrices.length >= this.MAX_STORAGE) {
+			this.storedPrices.splice(0, 1);
+		}
+
+		this.storedPrices.push(price);
+	}
+
+	updateAverage(price: number) {
+		this.addToStoredPrices(price);
+
+		const averagePrice = this.storedPrices.reduce((acc, cur) => acc+cur, 0) / this.storedPrices.length;
+		this.averagePrice = Math.round(averagePrice);
+	}
+}
+```
+
+Here's what it looks like in action:
+<Frame>
+    <iframe width="900px" height="700px" src="https://app.metz.sh/play/0d0b90bfe8f0411dbde9f59071927be9?minimal=true" />
+</Frame>

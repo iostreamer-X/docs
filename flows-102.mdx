@@ -1,8 +1,8 @@
 ---
 title: Flows-102
+description: Anatomy of a Flow
 ---
 
-## Anatomy
 We haven't covered the standard library yet, but for now, here are the basics: `std` is a globally available
 module, there to help you interact with the runtime.
 
@@ -10,5 +10,75 @@ You create flows using `std.flow`. It takes two parameters:
 1. Name of the flow
 2. An instance of a class
 
-And the rest would be best explained through the following graphic:
-![](/images/std-flow.png)
+And the rest would be best explained through the following graphics:
+<Frame caption="A standard flow, lazily evaluated.">
+	<img src="/images/std-flow.png" />
+</Frame>
+<br/>
+<Frame caption="A scheduled flow, eagerly evaluated, run immediately.">
+	<img src="/images/std-scheduled-flow.png" />
+</Frame>
+
+<br/>
+
+`std.flow` lets you go through the looking glass. It lets you provide a new state machine to the runtime, such that
+when it ticks, it manages this newly given state machine as well.
+
+#### FlowGenerator
+`std.flow` returns a `FlowGenerator`, which is an object that closely resembles the class instance that you provided.
+With one key difference, it still has methods, but all of them are `FlowFunction`s.
+
+#### FlowFunction
+This is as close as we can get to referring the underlying state-machine. A `FlowFunction` represents a factory that
+can produce one.
+
+It returns a `ScheduledFlow` if a schedule is provided to `std.flow`, or a `FlowExecutor` if not.
+
+## Lazy evaluation
+When you don't provide a schedule, you get a `FlowExecutor`. This is a handle that encapsulates work.
+A `FlowExecutor` doesn't mean that the underlying work has started, rather it gives you the ability to start
+it whenever you want.
+
+And in that sense, the runtime lazily evaluates flows, at least the ones that are not scheduled.
+
+Which means you can do this:
+```typescript
+class Main {
+	hello() {
+		const flow = std.flow<Main>("Print!", this).world("Hello");
+		this.print(flow); //We didn't call 'run' on flow, but gave it to 'print'.
+	}
+
+	world(arg: string) {
+		std.log(`${arg} World!`);
+	}
+
+	// This takes a flow, and simply runs it.
+	print(flow: std.FlowExecutor<void, Main['world']>) {
+		flow.run();
+	}
+}
+```
+Try this code in the [playground](https://app.metz.sh/try) to see what happens!
+
+<Warning>You can pass around flows like values, but be mindful of type arguments. They are essential to understanding
+the call graph.<br/><br/>The [standard library](/standard-library) covers how to use this effectively.</Warning>
+
+## Scheduled Flows
+You can provide a schedule to `std.flow` to get a `ScheduledFlow`. A `schedule` is an object and it can
+have <Tooltip tip="But not both!">either</Tooltip> of the following keys:
+
+<ParamField path="after" type="number">
+  Start the flow after given number of `ticks` have passed.
+</ParamField>
+<ParamField path="every" type="number">
+  Start a flow every time given number of `ticks` pass.
+</ParamField>
+
+A `ScheduledFlow` is evaluated immediately, and it begins its work in the same tick it's created. Which
+means passing around `ScheduledFlow` doesn't provide any value.
+
+Check out the [playground](https://app.metz.sh/try?templateId=4) to see how we can emulate a polling job using it.
+
+<br/>
+But how do we compose flows? Can we even? Let's get our answers in the next section!
