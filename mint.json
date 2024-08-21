@@ -19,28 +19,56 @@
       "to": "#113AFC"
     }
   },
-  "topbarLinks": [
+  "anchors": [
     {
-      "name": "Support",
+        "name": "Github",
+        "icon": "github",
+        "url": "https://github.com/metz-sh/simulacrum"
+    },
+    {
+        "name": "Try in Playground",
+        "icon": "code",
+        "url": "https://try.metz.sh"
+    },
+    {
+     	"name": "Join our Slack",
+      "icon": "slack",
       "url": "https://metzcommunity.slack.com/join/shared_invite/zt-1xr4ooes0-AhIP47ENEqrKmnfpCw6e8Q#/shared-invite/email"
-    }
+     }
   ],
   "topbarCtaButton": {
-    "name": "Home",
-    "url": "https://metz.sh"
-  },
+     "type": "link",
+     "url": "https://metz.sh",
+     "name": "Home"
+   },
   "tabs": [],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "core-concepts", "runtime", "standard-library"]
+      "pages": ["introduction","classes", "stories", "flows-101"]
     },
     {
-      "group": "Managing Classes",
+      "group": "Dependencies & Scope",
       "pages": [
-        "managing-classes/dependencies",
-        "managing-classes/files-and-scope"
+        "dependencies-and-scope/dependencies",
+        "dependencies-and-scope/files-and-scope"
       ]
+    },
+    {
+      "group": "Internals",
+      "pages": ["runtime"]
+    },
+    {
+      "group": "Async Operations",
+      "pages": ["flows-102", "awaiting-flows", "events"]
+    },
+    {
+      "group": "Visual Storytelling",
+      "pages": ["customizing-nodes", "debugging", "data-and-views"]
+    },
+    {
+      "group": "Utils",
+      "pages": ["hof", "standard-library", "decorators"]
     }
   ],
   "footerSocials": {

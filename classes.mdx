@@ -1,0 +1,49 @@
+---
+title: It begins with a class
+---
+
+Classes and methods are the fundamental building blocks of metz. A class gets rendered as a box, and its methods
+as smaller boxes inside it.
+
+<Tooltip tip="From the same class, as well as others!">A method can call other methods</Tooltip>, and that call gets rendered as a line between the caller and callee boxes.
+
+And that's it. It's that simple!
+
+But let's create a hello world program, just to drive the point home. And also because what kind
+of tutorial doesn't have a hello world?!
+
+<Frame>
+    <iframe width="900px" height="600px" src="https://app.metz.sh/play/924372b4b43042a09d261999ad057e8c?minimal=true" />
+</Frame>
+
+And here's the code for it:
+
+```typescript
+
+class Main {
+    /**
+     * Is reponsible for many important things.
+    */
+    hello() {
+        const result = this.world('Hello');
+        std.log(result);
+    }
+
+    /**
+     * Does all the heavy lifting!
+    */
+    world(arg: string) {
+        return `${arg} World!`
+    }
+}
+```
+That `std.log` is peculiar but we will visit it later. For now, notice that the comments and input/output types also
+get rendered.
+
+So it's not just a dumb box. It has other essential properties that helps us understand the component at a glance.
+
+<Tip>Try playing with it in the [playground](https://app.metz.sh/try), and see what happens when you add comments to the `Main` class.</Tip>
+
+So, we have a class and and some methods. But what do we do with it? Who is instantiating it and running the code?
+
+Let's answer that in the next section with [Stories](/stories).

@@ -1,0 +1,31 @@
+---
+title: Decorators
+---
+All the public decorators, available in global namespace.
+
+## `@Injectable`
+Enables a class to participate in [Dependency Injection](/dependencies-and-scope/dependencies#dependency-injection)
+<br/>
+
+## `@Show`
+Use this on data members to show them on the playground. See [this](/data-and-views).
+<br/>
+
+## `@Table`
+Renders the class and the data it's marked with `@Show` as a table. See [this](/data-and-views#table-view).
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="columns" type="string[]" required>
+	    The columns that should be rendered
+	  </ParamField>
+  </Tab>
+</Tabs>
+<br/>
+
+## `@Collection`
+Renders the class and the data it's marked with `@Show` as a collection. See [this](/data-and-views#collection-view).
+<br/>
+
+## `@KeyValue`
+Renders the class and the data it's marked with `@Show` as a key-value pair. See [this](/data-and-views#keyvalue-view).
+<br/>

@@ -1,0 +1,13 @@
+---
+title: Higher Order Functions
+---
+As we saw in [this](/runtime#state-machines) section, methods get transformed into state-machines. The compiler does this
+quite aggressively to all the functions to cover maximum ground without leaving anything behind.
+
+With that, it runs the risk of transforming functions that should be left un-touched, especially higher order
+functions.
+
+To prevent that from happening, you should wrap the function you intend to pass around in `std.lambda`. It's just
+a wrapper but tells the compiler to skip its transformation.
+
+<Warning>Higher Order Functions are an experimental feature.</Warning>

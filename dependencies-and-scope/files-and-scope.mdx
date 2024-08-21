@@ -1,0 +1,72 @@
+---
+title: Files and Scope
+---
+
+Metz emulates a simple in-memory filesystem, complete with file and folder operations. This means you can structure your code
+the way you see fit.
+
+In your `.ts` file, you can create the following things at top level:
+- `class`
+- `interface`
+- `enum`
+- `type`
+
+<video
+  muted
+  playsInline
+  controls
+  className="w-full aspect-video"
+  src="/videos/files.mp4"
+></video>
+
+
+## Global Scope
+We have now put the two classes `Hello` and `World` in two different files. But the question remains, how is `Hello`
+able to refer to `World`? Where's the import statement? How do you even import?
+
+That's the neat part, you don't!
+
+In metz you don't have to deal with importing anything, because everything is made available in the global namespace.
+
+Every class, interface, type, enum that you create in a file is made available for you to use in all your other files.
+
+<CodeGroup>
+
+```typescript hello.ts
+@Injectable
+class Hello {
+	/*
+	* Class 'World' is simply available in the namespace, just like 'std'.
+	*/
+	private worldInstance = std.resolve(World);
+
+    hello() {
+        const result = this.worldInstance.world('Hello');
+        std.log(result);
+    }
+}
+```
+
+```typescript world.ts
+@Injectable
+class World {
+
+    world(arg: string) {
+        return `${arg} World!`
+    }
+}
+```
+</CodeGroup>
+
+<br/>
+<br/>
+
+We have covered a lot of ground! We understand what puts boxes and lines on the playground. We understand
+how to make our code run. Not just that, but actually show different sides of the system! We also learnt how to do all this tidily.
+
+But to move forward, we need to look below the abstarctions a little. The way our runtime works, it's fully
+capable of helping you design and communicate a distributed system, a low level react component and anything in between.
+
+It's possible because **time works differently in the runtime**.
+
+<Tooltip tip="It's not intentional, these puns just emerge!">That's a bold statement.</Tooltip> But well worth the rabbit hole. Let's take a look under the hood, and see what it means for you!

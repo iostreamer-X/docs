@@ -1,0 +1,64 @@
+---
+title: Flows-101
+---
+
+Formally, a flow is a unit of execution. It resembles a thread from Java, a promise from JS and a Future from Rust.
+
+But this doesn't tell why we have flows though. Yes, it's a "thread" but so what? We have Promises
+in the <Tooltip tip="That's where the metz runtime actually runs!">browser</Tooltip>. What's so special about a Flow?
+
+## Capturing context
+
+Say we have a story script like:
+```typescript
+const main = new Main();
+main.hello();
+```
+
+The idea is to kick off the behaviour that is contained in `hello`. But why? What's the context? What if we run
+`main.hello()` again, but for completely different reasons? How do we differentiate those two executions?
+
+Simply put, we can't. Just running a function doesn't tell anything about it.
+
+And that's where `Flow` comes in. It is always named, and you can see how different flows are affecting the system and each other.
+
+<video
+  muted
+  playsInline
+  controls
+  className="w-full aspect-video"
+  src="/videos/flows.mp4"
+></video>
+
+<Tip>You can assign any name to a flow, but it helps if it'a aligned with the use-case you are trying to show.</Tip>
+
+You can create a flow through the following syntax:
+```typescript
+std.flow(
+	"<name of the flow>",
+	main, // An instance of a class.
+)
+.hello() // Simply call the method you want to run.
+.run(); // Normal flows are not eagerly executed, call 'run' when you want.
+```
+
+<Accordion title="My flow is not running. Why?">
+1. Did you use `std.flow` to create it?
+2. If yes, then did you pass an instance of the class and not some other object?
+3. Did you call the method you want to execute?
+4. Did you call `.run()` on the method you want to execute?
+
+If the answer is yes to all the question and it still doesn't work, please [create an issue](https://github.com/metz-sh/simulacrum/issues/new) on github.
+Or for a swifter response, [join our slack](https://metzcommunity.slack.com/join/shared_invite/zt-1xr4ooes0-AhIP47ENEqrKmnfpCw6e8Q#/shared-invite/email) and we will get on it right away.
+</Accordion>
+
+
+
+There's so much more to flows but we will stop here for now and dig deeper in [Flows-102](/flows-102) later.
+
+
+<br/>
+And with that, we have learnt the basic building blocks of metz. Go to the [playground](https://app.metz.sh/try) to try those things,
+but come back soon!
+
+In the next section we will cover how to go beyond just one class and file.
