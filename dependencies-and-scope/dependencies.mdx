@@ -2,14 +2,14 @@
 title: Dependencies
 ---
 
-So far, everything we have looked at involved just one class. But if we were to do everything in just one class
+If we were to do everything in just one class
 that won't be very [SOLID](https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design) of us.
 <br/>And it's not just about following patterns, it's not even practical or friendly!
 
 There are two ways you can talk to other classes. The first one is as old as OOP, simply create an instance
 and call its methods.
 
-The second, is more convenient based on the situation. Let's cover this first and then we can look at instantiating classes.
+The second, can sometimes be more convenient. Let's cover this first and then we can look at instantiating classes.
 
 ## Dependency Injection
 Rather than you manually managing creation of classes, metz can do it for you.
@@ -22,7 +22,7 @@ Moreover, metz will take care of creating the entire dependency graph for you.
 
 So to increase complexity for the sake of it, let's divide our hello world `Main` class [example](/classes) into two classes.
 
-So it now looks like this:
+So it should look like this:
 ```mermaid
   flowchart TB
     Hello ---> World
@@ -62,7 +62,10 @@ This is best suited for scenarios where you need multiple instances of the same 
 needs to have 2 instances.
 <br/>So we instantiated them using `new`, you can see this in the [code on playground](https://app.metz.sh/try?templateId=4) as well.
 
-<br/>
+## Best of both the worlds
+You are free to mix and match. A class not participating in DI, can still access the container. And an `@Injectable` class can create
+instances of classes.
+
 You can see how the system behaves when the two approaches are used simulatenously.
 <Frame>
     <iframe width="900px" height="600px" src="https://app.metz.sh/play/459ba1b42fa746b58f957b6c8f4603a6?minimal=true" />

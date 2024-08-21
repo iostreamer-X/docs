@@ -6,7 +6,7 @@ is to understand how to chain them.
 
 To put it simply, how does one flow, await on another flow's result?
 
-To begin with, it'd be weird for a flow to wait for a `ScheduledFlow`, especially when the it might not ever finish.
+To begin with, it'd be weird for a flow to wait for a `ScheduledFlow`, especially when it might not ever finish.
 Meaning you can only await a `FlowExecutor`.
 
 ### FlowExecutor
@@ -65,8 +65,8 @@ In real systems, you are often awaiting multiple things simultaneously, or racin
 That's exactly why we have `std.awaitAll()` and `std.awaitRace()`.
 
 ### `std.awaitAll`
-This is the equivalent of JavaScript's [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all). It takes an array of `FlowExecutor` and returns another array
-corresponding to result values. For example:
+This is the equivalent of JavaScript's [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all). It takes an array of `FlowExecutor` and returns an array
+corresponding to results of given `FlowExecutor`s. For example:
 ```typescript
 const result = std.awaitAll([
 	flow1,
@@ -101,4 +101,4 @@ Here's how it looks like in action:
 You can play with the code [here](https://app.metz.sh/try?templateId=5).
 
 <br/>
-We have one last mechanism left, events. The tried and tested mechanism for asynchronousity. Let's cover that in next section!
+We have one last mechanism left, events. The tried and tested method for asynchronousity. Let's cover that in next section!

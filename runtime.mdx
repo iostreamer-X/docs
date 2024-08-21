@@ -23,8 +23,7 @@ you press **'Build'**?
   <Step title="Run">
     As mentioned before in [Stories](/stories), nothing just runs. It's a story which gives your code
     the ability to run.
-    So, your stories are rendered, each of them is given their own instance of runtime. And whatever the story script
-    says is executed.
+    So, your stories are rendered, each of them is given their own instance of runtime. And the story script is executed.
 
     Check out the relevant code [here](https://github.com/metz-sh/simulacrum/blob/328eaf731a4b296e1e6101bb9e2444802a9f60f1/src/ui/components/story-provider-factory/story-provider-factory.tsx#L42).
   </Step>
@@ -70,7 +69,7 @@ class Main {
     }
 }
 ```
-Here's a simplistic view of what it looks like:
+Here's a simplistic view of what it looks like after transformation:
 ```mermaid
   flowchart TB
     subgraph hello
@@ -119,7 +118,7 @@ external time doesn't affect the runtime.
 ></video>
 
 # Conclusion
-We have established that `tick` the unit of time in metz, and it moves forward only when you ask it to.
+We have established that `tick` is the only unit of time in metz, and it moves forward only when you ask it to.
 <br/>You can have flows, that begin after certain ticks are passed, or flows that run every other tick.
 <br/>You can also sleep for certain number of ticks.
 
