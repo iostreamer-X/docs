@@ -2,9 +2,9 @@
 title: Events
 ---
 
-This mechanism doesn't need a lot of introduction, so let's get down how you can use it.
+This mechanism doesn't need a lot of introduction, so let's get down to how you can use it.
 
-In metz, events are transmitted over a `Channel` but your interface through two key functions.
+In metz, events are transmitted over a `Channel` and you use its capabilities through two key functions.
 
 ### `std.createChannelEmitter`
 This function takes a `topic` as a parameter, creates a `Channel` for that topic and returns an emitter
@@ -12,8 +12,8 @@ which will let you dispatch events.
 
 ### `std.registerChannelListener`
 This takes two params, a `topic` and a `listener`. The `listener` must return a `FlowExecutor`
-With these params, the channel corresponding the topic is found and whenever there's an event
-on that channel, the `listener` is invoked.
+With these params, whenever there's an event
+on the channel for given topic, the `listener` is invoked.
 
 For example:
 ```typescript
@@ -65,3 +65,12 @@ Here's what it looks like in action:
 <Frame>
     <iframe width="900px" height="700px" src="https://app.metz.sh/play/0d0b90bfe8f0411dbde9f59071927be9?minimal=true" />
 </Frame>
+
+<br/>
+And with that, we have covered all about asynchronous operations that metz has to offer.
+
+<br/>
+Along the way we also learnt everything about designing systems in metz.
+<br/>But does it look pretty? How does one get those icons? Also, how are we able to show data?
+
+Let's answer that in the next section!

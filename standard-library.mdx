@@ -2,57 +2,175 @@
 title: The Standard Library
 ---
 
-Metz exposes its standard library through the global variable `std`. It has everything needed to interact with the runtime and other helpers.
+It is exposed through the global variable `std` and has everything needed to interact with the runtime and other helpers.
 
 # `resolve`
 Takes a class reference and gets its instance from the DI container.
 
-```typescript
-function resolve<T extends InjectableClasses>(
-  classInstance: Constructor<T>
-): T
-```
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="classReference" type="Class" required>
+	    A reference to a class participating in [Dependency Injection](/dependencies-and-scope/dependencies#dependency-injection)
+	  </ParamField>
+  </Tab>
+  <Tab title="Result">
+	  <ResponseField name="classInstance" type="Object">
+	    Instance of given class reference.
+	  </ResponseField>
+  </Tab>
+</Tabs>
 **Example**
 
 To retreive an instance of a class called `LoadBalancer`, you'd write:
 ```typescript
   const loadBalancer = std.resolve(LoadBalancer);
 ```
+<Warning>If the param is a class that is not decorated with `@Injectable` then this will throw an error!</Warning>
 
-<Warning>This only works with classes participating in [Dependency Injection](/managing-classes/dependencies)</Warning>
 
 <br/>
-<br/>
-<br/>
-
 # `flow`
-Helper to create and run a [Flow](/core-concepts#flows)
-```typescript
-function flow<T extends AllClasses>(
-  name: string, 
-  classInstance: T, 
-  options?: { after: number } | { every: number }
-): MetzFlow<T>
-```
+Helper to create [flows](/flows-101).
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="name" type="string" required>
+	    Name of the flow
+	  </ParamField>
+		<ParamField path="classInstance" type="Object" required>
+	    An instance of a class
+	  </ParamField>
+		<ParamField path="schedule" type="Object">
+	    ```typescript
+      { after: number } | { every: number }
+			```
 
-Takes an instance of one of your classes, augments it and returns a `MetzFlow`. Which actually is a proxy of your given instance and has similar types.
-When you execute a function on `MetzFlow`, the runtime creates a new flow and starts executing it.
+			This param enables you to create [Scheduled Flows](/flows-102#scheduled-flows)
+	  </ParamField>
+  </Tab>
+  <Tab title="Result">
+	  <ResponseField name="flowGenerator" type="FlowGenerator">
+	    A `FlowGenerator` enables you to run flows. See more [here](/flows-102).
+	  </ResponseField>
+  </Tab>
+</Tabs>
 
+<br/>
+# `log`
+Equivalent of [console.log](https://developer.mozilla.org/en-US/docs/Web/API/console/log_static). Halts the execution.
+
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="messages" type="...any[]">
+	    You can pass any number of messages of any type.
+	  </ParamField>
+  </Tab>
+</Tabs>
 **Example**
+
 ```typescript
-  const loadBalancer = std.flow(
-    'Route requests to servers', 
-    std.resolve(LoadBalancer)
-  );
-  
-  //This works because std.flow returns back the provided instance
-  loadBalancer.shouldFail = true;
-  
-  loadBalancer.route();
+  std.log("This is pretty", 1337);
 ```
 
-Or a more succint way of doing it if you are not modifying anything:
-```typescript
-  const loadBalancer = std.resolve(LoadBalancer);
-  std.flow('Route requests to servers', loadBalancer).route();
-```
+<br/>
+# `lambda`
+<Warning>This is experimental</Warning>
+Wrapper to skip higher order functions getting transformed by compiler. See [this](/runtime#higher-order-functions).
+
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="fn" type="Function" required>
+	    The function you want to pass around.
+	  </ParamField>
+  </Tab>
+  <Tab title="Result">
+	  <ResponseField name="fn" type="Function">
+	    Returns the same function, unchanged.
+	  </ResponseField>
+  </Tab>
+</Tabs>
+
+<br/>
+# `currentTick`
+Equivalent to `System.currentTimeMillis()` or `Date.now()` but follows [temporal rules](/runtime#time-stands-still) of runtime.
+<Tabs>
+  <Tab title="Result">
+	  <ResponseField name="tick" type="number">
+	    Returns the current tick/time.
+	  </ResponseField>
+  </Tab>
+</Tabs>
+
+<br/>
+# `sleep`
+Halts the flow for given number of ticks.
+
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="ticks" type="number" required>
+	    Number of ticks the flow should halt for.
+	  </ParamField>
+  </Tab>
+</Tabs>
+
+<br/>
+# `awaitAll`
+Suspends the current flow till all the given flows complete. See [here](/awaiting-flows#std-awaitall).
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="flowExecutors" type="FlowExecutor[]" required>
+	    The flows you want to await on.
+	  </ParamField>
+  </Tab>
+  <Tab title="Result">
+	  <ResponseField name="result" type="T[]">
+	    An array of results of the given flows.
+	  </ResponseField>
+  </Tab>
+</Tabs>
+
+
+<br/>
+# `awaitRace`
+Suspends the current flow till one of the given flows complete. See [here](/awaiting-flows#std-awaitrace).
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="flowExecutors" type="FlowExecutor[]" required>
+	    The flows you want to race.
+	  </ParamField>
+  </Tab>
+  <Tab title="Result">
+	  <ResponseField name="result" type="T">
+	    The result of the flow that completed first.
+	  </ResponseField>
+  </Tab>
+</Tabs>
+
+<br/>
+# `createChannelEmitter`
+Creates a channel emitter which lets you push events for given topic. See [this](/events).
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="topic" type="string" required>
+	    A dedicated channel will be created for the topic.
+	  </ParamField>
+  </Tab>
+  <Tab title="Result">
+	  <ResponseField name="emitter" type="ChannelEmitter">
+	    Simply call `emit` on it to start pushing events.
+	  </ResponseField>
+  </Tab>
+</Tabs>
+
+<br/>
+# `registerChannelListener`
+Lets you susbscribe to topics. See [this](/events).
+<Tabs>
+  <Tab title="Params">
+	  <ParamField path="topic" type="string" required>
+	    The topic to listen.
+	  </ParamField>
+		<ParamField path="listener" type="(data: T) => FlowExecutor" required>
+	    The function to invoke whenever there's an event pushed for given topic.
+	  </ParamField>
+  </Tab>
+</Tabs>
