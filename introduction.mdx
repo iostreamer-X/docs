@@ -1,7 +1,8 @@
 ---
 title: Introduction
 ---
-Metz is a powerful tool for creating interactive diagrams from TypeScript code.
+Metz is a powerful tool for creating interactive diagrams with TypeScript code.
+It lets you express complex systems visually and interactively.
 <br/>But it's also a long way from drawing boxes and lines. It's a different way of thinking about documentation and communication.
 
 ## Mental Model
@@ -9,7 +10,7 @@ With diagramming tools, we are well aware that we are dumbing down complex ideas
 
 It's like [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck), too simple to do anything complex.
 
-With metz, you need to think in systems, in code. You don't need to worry about how and where to place a box, you need think how your design should work.
+Mets lets you think of systems in terms of code. You don't need to worry about how and where to place a box, you need think how your design should work.
 
 ### Why code?
 It's familiar, we as engineers feel comfortable with it. But if we were to use a DSL which lets us create boxes and lines, then it's the same problem, presented differently.
@@ -21,9 +22,9 @@ When we are building software, we write code with the intention that it does wha
 
 It's the exact same with metz.
 
-Say you are building a system which has a polling mechanism and it fetches data from one database and updates another. You don't need
+Say you are building a system which has a polling mechanism and it fetches data from one database and updates another. You shouldn't have
 to write code to create a box for a poller.
-You need to write code ***FOR*** a poller.
+You should be writing code ***FOR*** a poller.
 
 So you might come up with a design that can say:
 <Steps>
@@ -50,7 +51,7 @@ class Poller {
                 status: 'processing'
             },
             order => order.status === 'pending'
-        )
+        );
 
         // Step 2
         if(!updatedOrder) {
