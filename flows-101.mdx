@@ -2,35 +2,68 @@
 title: Flows-101
 ---
 
-Formally, a flow is a unit of execution. It resembles a thread from Java, a promise from JS and a Future from Rust.
+Almost every runtime has a main thread. Whatever code you write, it's executed by that thread unless specified otherwise.
 
-But this doesn't tell why we have flows though. Yes, it's a "thread" but so what? We have Promises
-in the <Tooltip tip="That's where the metz runtime actually runs!">browser</Tooltip>. What's so special about a Flow?
+In metz, that's not the case. If you want something executed, you need to create a "thread". If you don't, things simply don't run.
 
-## Capturing context
+In metz, **a flow captures the idea of a thread**. It's not *exactly* that, but there's good overlap.
 
-Say we have a story script like:
-```typescript
-const main = new Main();
-main.hello();
+For example, here are two story scripts. One does nothing, and the other works:
+<CodeGroup>
+
+```typescript Authenticate Normally
+const service = new AuthenticationService();
+
+/*
+ * This code will have no effect.
+*/
+service.authenticate('123');
 ```
 
-The idea is to kick off the behaviour that is contained in `hello`. But why? What's the context? What if we run
-`main.hello()` again, but for completely different reasons? How do we differentiate those two executions?
+```typescript Authenticate but DB is down
+const service = new AuthenticationService();
+service.isDatabaseDown = true;
 
-Simply put, we can't. Just running a function doesn't tell anything about it.
+/*
+ * Will actually start executing 'authenticate'.
+*/
+std.flow("Authenticate user", service).authenticate('123').run();
+```
+</CodeGroup>
 
-And that's where `Flow` comes in. It is always named, and you can see how different flows are affecting the system and each other.
+<br/>
+Unlike threads, flows have an identity that you provide. It's not a nameless, behind the scene thing executing your code. Flows are front and center.
 
+## Business and Logical Flows
+In PRDs, or even Design Documents you might have come across the term 'Flow'. Something like 'User login' flow or 'Use Cache' flow.
+
+In those documents, a flow represents a sequence of events that occur under that context. Mind you, the flow is a small part of a larger picture, it
+doesn't tell the full story. We could be talking about a PRD to launch referrals or a Design Document about data pipelines.
+
+We choosing the same terminology in metz is not serendipitous. It's called a flow in metz to capture this exact meaning.
+
+**A business or logical flow and a metz flow are exactly the same.**
+
+<Accordion title="How is it different from a story?">
+  Once again, as is the case with PRDs and Design documents, a flow is a small part of a larger design.
+
+  A story can be talking about 'User accepts referral', and it can contain a flow called 'User signs up'. And the signup flow will kick off
+  a chain of events, data getting passed around, but all under the context of 'User signs up'.
+  <br/>Which in turn is happening in service of a user accepting a referral.
+
+  The story could change to 'User refuses referral', and the 'User signs up' flow will still kick off and do its job.
+</Accordion>
+
+You can see how flows interact with each other and the system:
 <video
   muted
   playsInline
   controls
   className="w-full aspect-video"
-  src="/videos/flows.mp4"
+  src="/videos/flws.mp4"
 ></video>
 
-<Tip>You can assign any name to a flow, but it helps if it'a aligned with the use-case you are trying to show.</Tip>
+## How to use flows?
 
 You can create a flow through the following syntax:
 ```typescript

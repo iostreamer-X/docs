@@ -4,7 +4,9 @@ title: Dependencies
 
 If we were to do everything in just one class
 that won't be very [SOLID](https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design) of us.
-<br/>And it's not just about following patterns, it's not even practical or friendly!
+<br/>And it's not just about following patterns. A class in metz represents one component. If we do everything
+in one class, we would literally be designing a system which has just one component. Not a very useful design!
+
 
 There are two ways you can talk to other classes. The first one is as old as OOP, simply create an instance
 and call its methods.
@@ -16,8 +18,6 @@ Rather than you manually managing creation of classes, metz can do it for you.
 We maintain a DI container to store a singleton instance of a classe. These instances can then be retreived using `std.resolve`.
 
 Simply decorate the class with `@Injectable` and it will start participating in dependency injection.
-
-Metz will put the class in a box, and you can take it out whenever or wherever you want.
 Moreover, metz will take care of creating the entire dependency graph for you.
 
 So to increase complexity for the sake of it, let's divide our hello world `Main` class [example](/classes) into two classes.

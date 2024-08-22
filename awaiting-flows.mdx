@@ -1,26 +1,8 @@
 ---
 title: Awaiting Flows
 ---
-With the [state machine analogy](/runtime#state-machines) in mind, we can now look closely at composing flows. The goal
-is to understand how to chain them.
 
-To put it simply, how does one flow, await on another flow's result?
-
-To begin with, it'd be weird for a flow to wait for a `ScheduledFlow`, especially when it might not ever finish.
-Meaning you can only await a `FlowExecutor`.
-
-### FlowExecutor
-We covered a lot about it in the last section when we were learning about [lazy evaluation](/flows-102#lazy-evaluation). But we didn't get a chance to look at its interface:
-```typescript
-class FlowExecutor<RT, M> {
-	run(): void;
-	await(): RT;
-}
-```
-
-The type argument `RT` captures the return type of the [FlowFunction](/flows-102#flowfunction) that spawned it, `M` we can ignore for now.
-
-We have been using `run()` everywhere, but a `FlowExecutor` gives you `await(): RT` to await the flow, out of the box.
+A `FlowExecutor` has `await(): RT` to enable the parent flow to await its result.
 
 Here's an example:
 ```typescript

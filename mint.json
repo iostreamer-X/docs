@@ -68,7 +68,7 @@
     },
     {
       "group": "Utils",
-      "pages": ["hof", "standard-library", "decorators"]
+      "pages": ["hof", "standard-library", "miscellaneous"]
     }
   ],
   "footerSocials": {
