@@ -74,7 +74,10 @@ Here's another example of a system which depends on a payment gateway(of sorts).
 two different entries in our system for the same payment.
 <br/>From the **'Stories'** dropdown, choose the other story to see how the system behaves normally.
 
-<Frame>
+<Frame caption="In the first story we see that the poller and webhook align perfectly to create a blind spot.
+Both start working on the same payment, not knowing that the other is doing the same.
+This leads to our system capturing the same payment twice!
+">
     <iframe width="900px" height="700px" src="https://app.metz.sh/play/0286b754d9e4408ba172e344eeac47b9" />
 </Frame>
 <Card horizontal title="Click here to open in a tab" icon="link" href="https://app.metz.sh/play/0286b754d9e4408ba172e344eeac47b9">
