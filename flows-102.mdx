@@ -10,38 +10,45 @@ You create flows using `std.flow`. It takes two parameters:
 1. Name of the flow
 2. An instance of a class
 
-And the rest would be best explained through the following graphics:
+`std.flow` lets you go through the looking glass. It lets you provide a new [state machine](/runtime#state-machines) to the runtime, such that
+when it [ticks](/runtime#tick), it manages this newly given state machine as well.
+
+
+## FlowExecutor
 <Frame caption="A standard flow, lazily evaluated.">
 	<img src="/images/std-flow.png" />
 </Frame>
-<br/>
-<Frame caption="A scheduled flow, eagerly evaluated, run immediately.">
-	<img src="/images/std-scheduled-flow.png" />
-</Frame>
 
 <br/>
 
-`std.flow` lets you go through the looking glass. It lets you provide a new state machine to the runtime, such that
-when it ticks, it manages this newly given state machine as well.
+<AccordionGroup>
+	<Accordion title="What's a FlowGenerator?">
+	`std.flow` returns a `FlowGenerator`, which is an object that closely resembles the class instance that you provided.
+	With one key difference, it still has methods, but all of them are `FlowFunction`s.
+	</Accordion>
+	<Accordion title="What's a FlowFunction?">
+	This is as close as we can get to referring the underlying state-machine. A `FlowFunction` represents a factory that
+	can produce one.
 
-#### FlowGenerator
-`std.flow` returns a `FlowGenerator`, which is an object that closely resembles the class instance that you provided.
-With one key difference, it still has methods, but all of them are `FlowFunction`s.
+	It returns a `ScheduledFlow` if a schedule is provided to `std.flow`, or a `FlowExecutor` if not.
+	</Accordion>
+</AccordionGroup>
 
-#### FlowFunction
-This is as close as we can get to referring the underlying state-machine. A `FlowFunction` represents a factory that
-can produce one.
+When you don't provide a schedule to `std.flow` and call a `FlowFunction`, you get a `FlowExecutor`. This is a handle that encapsulates work.
 
-It returns a `ScheduledFlow` if a schedule is provided to `std.flow`, or a `FlowExecutor` if not.
+A `FlowExecutor` doesn't start its work unless explcitly told to do so. It has two function through which
+you can start execution:
 
-## Lazy evaluation
-When you don't provide a schedule, you get a `FlowExecutor`. This is a handle that encapsulates work.
-A `FlowExecutor` doesn't mean that the underlying work has started, rather it gives you the ability to start
-it whenever you want.
+```typescript
+interface FlowExecutor<RT, M> {
+	run(): void;
+	await(): RT;
+}
+```
+<Info>We will look at `await` in next section.</Info>
+The type argument `RT` captures the return type of the [FlowFunction](/flows-102#flowfunction) that spawned it, `M` we can ignore for now.
 
-And in that sense, the runtime lazily evaluates flows, at least the ones that are not scheduled.
-
-Which means you can do this:
+Given a `FlowExecutor` is a handle, we can do this:
 ```typescript
 class Main {
 	hello() {
@@ -61,10 +68,15 @@ class Main {
 ```
 Try this code in the [playground](https://app.metz.sh/try) to see what happens!
 
-<Warning>You can pass around flows like values, but be mindful of type arguments. They are essential to understanding
-the call graph.<br/><br/>The [standard library](/standard-library) covers how to use this effectively.</Warning>
+<Warning>You can pass around flows like values, but be mindful of type arguments. They are essential to creating
+the call graph.</Warning>
 
 ## Scheduled Flows
+
+<Frame caption="A scheduled flow, eagerly evaluated, run immediately.">
+	<img src="/images/std-scheduled-flow.png" />
+</Frame>
+
 You can provide a schedule to `std.flow` to get a `ScheduledFlow`. A `schedule` is an object and it can
 have <Tooltip tip="But not both!">either</Tooltip> of the following keys:
 
@@ -75,10 +87,5 @@ have <Tooltip tip="But not both!">either</Tooltip> of the following keys:
   Start a flow every time given number of `ticks` pass.
 </ParamField>
 
-A `ScheduledFlow` is evaluated immediately, and it begins its work in the same tick it's created. Which
-means passing around `ScheduledFlow` doesn't provide any value.
-
-Check out the [playground](https://app.metz.sh/try?templateId=4) to see how we can emulate a polling job using it.
-
-<br/>
-But how do we compose flows? Can we even? Let's get our answers in the next section!
+A `ScheduledFlow` is evaluated immediately, and it begins its work in the same tick it's created.
+<br/>Check out the [playground](https://app.metz.sh/try?templateId=4) to see how we can emulate a polling job using it.

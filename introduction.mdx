@@ -1,46 +1,62 @@
 ---
 title: Introduction
 ---
-Metz is a powerful tool for creating interactive diagrams from TypeScript code. You can use it to express complex engineering ideas or even abstract ones. With metz, communication is just a coding problem!
-
-But it's also a long way from drawing boxes and lines. It's a different way of thinking about documentation and communication.
+Metz is a powerful tool for creating interactive diagrams from TypeScript code.
+<br/>But it's also a long way from drawing boxes and lines. It's a different way of thinking about documentation and communication.
 
 ## Mental Model
-When designing, regardless of level, we are used to breaking down the system in components. Next, we figure out how components interact with each other.
-And that's usually the end of it, because that's as far current tools can take us.
+With diagramming tools, we are well aware that we are dumbing down complex ideas because there's not much we can do with the primitives these tools provide.
 
-But with metz, you are nudged to solve the problem using code.Because with code you get behaviour for free.
-<br/>And that's where metz shines.
+It's like [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck), too simple to do anything complex.
 
-Say you were to design a system where you have multiple cron jobs, polling databases and updating them.
-<br/>You can either stop at static boxes or you could just write the most bare bones code for the system, and metz will visually simulate it for you.
+With metz, you need to think in systems, in code. You don't need to worry about how and where to place a box, you need think how your design should work.
 
-<Frame>
-    <iframe width="900px" height="400px" src="https://app.metz.sh/play/fc6528590cc2404283a98533aedeb519?minimal=true" />
-</Frame>
+### Why code?
+It's familiar, we as engineers feel comfortable with it. But if we were to use a DSL which lets us create boxes and lines, then it's the same problem, presented differently.
 
+We want to use code, not for the sake of it, but because of the freedom it provides us to express complexity.
 
-For example, the code for poller, simply looks like this
+### What kind of code?
+When we are building software, we write code with the intention that it does what it's supposed to. No strings attached, no frills.
+
+It's the exact same with metz.
+
+Say you are building a system which has a polling mechanism and it fetches data from one database and updates another. You don't need
+to write code to create a box for a poller.
+You need to write code ***FOR*** a poller.
+
+So you might come up with a design that can say:
+<Steps>
+  <Step title="Get and Update from database">
+    For a particular condition, check if database contains what we are looking for.
+    Update it and retrieve it.
+  </Step>
+  <Step title="Add to another database">
+    If we do get something from first step, add it to another database.
+  </Step>
+</Steps>
+
+And the code can look something like this:
 ```typescript poller.ts
 
 class Poller {
-    private ordersTable = std.resolve(OrdersTable);
-    private pollingCollection = std.resolve(PollingCollection);
+    private ordersTable = new OrdersTable();
+    private pollingCollection = new PollingCollection();
 
     poll() {
-        //Update all 'pending' orders to 'processing' state
-        const updatedOrder = this.ordersTable.update(
+        // Step 1
+        const updatedOrder = this.ordersTable.updateOne(
             {
                 status: 'processing'
             },
-            std.lambda(order => order.status === 'pending')
+            order => order.status === 'pending'
         )
 
+        // Step 2
         if(!updatedOrder) {
-            return
+            return;
         }
 
-        std.log('Got an order!')
         this.pollingCollection.insert({
             id: `poll_${updatedOrder.id}`,
             order_id: updatedOrder.id
@@ -49,9 +65,25 @@ class Poller {
 
 }
 ```
+No way this code can be used in production, but that's the thing. It's not for production.
+<br/>**It's simply a way to express our design using code, that's it.**
+
+In return, this is what you get from metz:
+<Frame>
+    <iframe width="900px" height="400px" src="https://app.metz.sh/play/fc6528590cc2404283a98533aedeb519?minimal=true" />
+</Frame>
+
+We take your code, which says nothing about how to present it, only talks about behaviour pertaining to your design. Then we **run & render** that **behaviour**.
+
 
 ## Advantages
+### Minimal overhead
+You don't have to burden yourself with translating or dumbing down ideas.
+<br/>Just write code!
+
+### Complexity is easy to express and easier to understand
 It's subtle, but notice that there are two pollers but not two entries in polling collection.
+
 The proposed design of a system like this, would have this crucial fact lost in a footnote.
 And when implementing the design, someone could easily miss this required behaviour.
 
@@ -59,4 +91,5 @@ But when you use code, you weild the perfect medium to express such critical fac
 this behaviour becomes not only apparent but a first class citizen of documentation.
 
 <br/>
-Let's look the fundamental concept behind this, [classes](/classes).
+But enough words, let's get down to details in the next section!
+<br/> We will learn how to write code in metz, its building blocks and its rules.

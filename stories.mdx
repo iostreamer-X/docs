@@ -1,13 +1,7 @@
 ---
 title: Stories
 ---
-
-Say we created a simple web server using NodeJS. Our `package.json` file will have a configuration called [main](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#main),
-telling the entrypoint to our code.
-<br/>And if we dockerize our app, we will literally have an [entrypoint](https://docs.docker.com/reference/dockerfile/#entrypoint) which
-will control what runs in the container.
-
-And that's good starting point to introduce stories.
+A story, simply put, is a script which tells how to run your code. It's where you do all the setup work and kick off execution.
 
 <video
   muted
@@ -17,20 +11,18 @@ And that's good starting point to introduce stories.
   src="/videos/story-creation.mp4"
 ></video>
 
-At its very core, a story is what's responsible for running your code. It's very much an entrypoint to it.
-
-In metz your code doesn't just run and get visualised, it's a story that gets rendered.
-It's essentially a script where you can instantiate classes, write all sorts of setup code.
-<br/>The execution of that script is what gets the ball rolling.
-
-## More than an entrypoint
-The key difference here, is that unlike entrypoints, you can have as many stories you want. In fact, that's the intended way.
+## Cover edge cases
+A story represents an instantiation of your code. You are free to create as many as you want.
 
 Each story, tells a different <Tooltip tip="This is shameful but couldn't be helped.">story</Tooltip> about your code, your design.
 This is where you comprehensively communicate all the edge cases, all the "What If?" questions and let your audience see every
 angle of the designed system.
 
-This ties quite neatly with the [Class based](/classes) approach we have. Each class represents data and behaviour, where they both can change each other.
+<Accordion title="Isn't that a test case?">
+  You can think of a story as a test case, but test cases are binary. They either pass or fail, and are there to assert behaviour of the system.
+
+  A story on the other hand, simply shows different behaviours the system can have.
+</Accordion>
 
 Let's look at an example. Say we have an authentication system where the db can fail, and does things differently if it indeed fails.
 To capture this, we can write the following code:
@@ -55,27 +47,30 @@ class AuthenticationService {
 }
 ```
 
-This is an oversimplification, but ignoring that for now. Let's focus on `isDatabaseDown` where if it's `false` all good, but if `true` then we get an error response.
+Here we are being very explicit, and saying that to simulate an error behaviour `isDatabaseDown` should be `true`.
 
-And to cover both the cases, we can create two stories!
+You can always make it more real by adding methods that mimic real world systems.
+At the same time, you always have these escape hatches at your disposal. You can just use flags as railway switches and change tracks.
+
+Now, to cover both the cases, we can create two stories!
 <br/> One where `isDatabaseDown` is `false` and anothere where it's `true`.
 
 <CodeGroup>
 
-```typescript First Script
+```typescript Authenticate Normally
 const service = new AuthenticationService();
-std.flow("DB is up", service).authenticate('123').run();
+std.flow("Authenticate user", service).authenticate('123').run();
 ```
 
-```typescript Second Script
+```typescript Authenticate but DB is down
 const service = new AuthenticationService();
 service.isDatabaseDown = true;
-std.flow("DB is down", service).authenticate('123').run();
+std.flow("Authenticate user", service).authenticate('123').run();
 ```
 </CodeGroup>
 <br/>
 <br/>
-Here's an example of a system which depends on stripe. The first story showcases how a particular condition can cause
+Here's another example of a system which depends on a payment gateway(of sorts). The first story showcases how a particular condition can cause
 two different entries in our system for the same payment.
 <br/>From the **'Stories'** dropdown, choose the other story to see how the system behaves normally.
 
@@ -92,6 +87,6 @@ Each story, is the exection of same underlying code but under different conditio
 <br/>Just write a script, change the initial conditions, and you get a completely new perspective of the design, without repeating yourself.
 
 <br/>
-But what's the `std.flow` business? We have seen that before, but what does it do?. Why does it have that weird syntax?
+But what was that `std.flow` business in the script? What does it do? Why does it have that weird syntax?
 
 Well, let's find out in the next section!
